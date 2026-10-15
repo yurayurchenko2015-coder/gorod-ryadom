@@ -145,7 +145,16 @@ function renderApp(){
     <button class="btn ghost" data-go="0">Пройти заново</button>`;
   }
   app.innerHTML=h; app.scrollTop=0; app.classList.remove("vfade"); void app.offsetWidth; app.classList.add("vfade");
-  app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{ step=+b.dataset.go; 
+  app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{ step=+b.dataset.go; renderApp(); });
+  app.querySelectorAll("canvas").forEach(cv=>drawCover(cv,c.id));
+  app.querySelectorAll(".tgl button").forEach(b=>b.onclick=()=>{ app.querySelectorAll(".tgl button").forEach(x=>x.classList.toggle("on",x===b)); app.querySelectorAll(".open").forEach(o=>o.style.color=b.dataset.w==="sun"?"#5B6B86":"#FF6F61"); });
+  const f=document.getElementById("reg");
+  if(f) f.onsubmit=e=>{ e.preventDefault(); const er=document.getElementById("er");
+    const nm=f.querySelector("#nm").value.trim(), ph=f.querySelector("#ph").value.replace(/\D/g,"");
+    if(!nm){er.textContent="Введите имя";return;} if(ph.length<11){er.textContent="Введите телефон полностью, 11 цифр";return;}
+    if(!f.querySelector("#okc").checked){er.textContent="Отметьте согласие на обработку данных";return;}
+    uname=nm; step=3; renderApp(); };
+}
 const tabs=document.getElementById("tabs");
 function drawTabs(){ tabs.innerHTML=C.map((c,i)=>`<button class="${i===ci?'on':''}" data-i="${i}">${c.short}</button>`).join(""); tabs.querySelectorAll("button").forEach(b=>b.onclick=()=>{ci=+b.dataset.i;step=0;history.replaceState(null,"","#"+C[ci].id);drawTabs();renderApp();}); }
 const hi=C.findIndex(c=>"#"+c.id===location.hash); if(hi>=0) ci=hi;
